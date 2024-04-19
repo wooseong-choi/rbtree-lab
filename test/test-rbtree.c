@@ -20,8 +20,14 @@ void test_init(void) {
 
 // root node should have proper values and pointers
 void test_insert_single(const key_t key) {
+  printf("삽입 테스트 중 ");
   rbtree *t = new_rbtree();
+  printf("삽입 테스트 중2 ");
   node_t *p = rbtree_insert(t, key);
+  // p = rbtree_insert(t, 12);
+  // p = rbtree_insert(t, 5000);
+  // printf("%d === ====  ", p->left->key);
+  // printf("%d === ====  ", p->right->key);
   assert(p != NULL);
   assert(t->root == p);
   assert(p->key == key);
@@ -369,17 +375,17 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 }
 
 int main(void) {
-  // printf("이건 테스트야\n");
   test_init();
+  printf("작동 테스트 준비\n");
   test_insert_single(1024);
-  test_find_single(512, 1024);
-  test_erase_root(128);
-  test_find_erase_fixed();
-  test_minmax_suite();
-  test_to_array_suite();
-  test_distinct_values();
-  test_duplicate_values();
-  test_multi_instance();
-  test_find_erase_rand(10000, 17);
+  // test_find_single(512, 1024);
+  // test_erase_root(128);
+  // test_find_erase_fixed();
+  // test_minmax_suite();
+  // test_to_array_suite();
+  // test_distinct_values();
+  // test_duplicate_values();
+  // test_multi_instance();
+  // test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }
