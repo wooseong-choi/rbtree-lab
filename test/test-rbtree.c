@@ -41,6 +41,7 @@ void test_insert_single(const key_t key) {
   assert(p->right == NULL);
   assert(p->parent == NULL);
 #endif
+  free(p);
   delete_rbtree(t);
 }
 

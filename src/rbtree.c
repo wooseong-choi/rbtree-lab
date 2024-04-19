@@ -16,11 +16,24 @@ rbtree *new_rbtree(void) {
   printf("rb_tree 생성\n");
   return p;
 }
+void delete_rbtree_recursive( node_t *cur, node_t *nil ){
+  if(cur == nil){
+    return;
+  }
+  delete_rbtree_recursive(cur->left,nil);
+  delete_rbtree_recursive(cur->right,nil);
+  free(cur);
+}
 
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
+
+  // delete_rbtree_recursive(t->root, t->nil);
+  free(t->nil);
+
   free(t);
 }
+
 
 void left_rotate(rbtree *t ,node_t *n){
   // printf("좌회전\n");
