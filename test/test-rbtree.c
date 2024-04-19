@@ -6,6 +6,7 @@
 
 // new_rbtree should return rbtree struct with null root node
 void test_init(void) {
+  // printf("이것도 테스트야 \n");
   rbtree *t = new_rbtree();
   assert(t != NULL);
 #ifdef SENTINEL
@@ -368,6 +369,7 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 }
 
 int main(void) {
+  // printf("이건 테스트야\n");
   test_init();
   test_insert_single(1024);
   test_find_single(512, 1024);
