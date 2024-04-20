@@ -154,7 +154,8 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   // printf("일단 여기까진 됬어\n");
   rbtree_insert_fixup(t, z);
   // printf("뀨\n");
-  
+  // free(y);
+  // free(z);
   return t->root;
 }
 
@@ -182,15 +183,38 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
 node_t *rbtree_min(const rbtree *t) {
   // TODO: implement find
   node_t *temp = t->root;
-  // node_t *result = temp;
+  node_t *result = temp;
   // int min = result->key;
   while (temp != t->nil)
   {
-      
-  }
-  
+    if (temp->left != t->nil)
+      temp = temp->left;
+    else {
+      result = temp;
+      break;
+    }
 
-  return t->root;
+  }
+  return result;
+}
+
+
+node_t *rbtree_max(const rbtree *t) {
+    // TODO: implement find
+  node_t *temp = t->root;
+  node_t *result = temp;
+  // int min = result->key;
+  while (temp != t->nil)
+  {
+    if (temp->right != t->nil)
+      temp = temp->right;
+    else {
+      result = temp;
+      break;
+    }
+
+  }
+  return result;
 }
 
 node_t *rbtree_min_in_choice(const rbtree *t, node_t * cur) {
@@ -212,10 +236,6 @@ node_t *rbtree_min_in_choice(const rbtree *t, node_t * cur) {
   return result;
 }
 
-node_t *rbtree_max(const rbtree *t) {
-  // TODO: implement find
-  return t->root;
-}
 
 void rbtree_erase_fixup(rbtree * t, node_t *cur){
   node_t *temp; // 형제선언
@@ -297,12 +317,12 @@ int rbtree_erase(rbtree *t, node_t *p) {
   node_t * tempY = p;
   node_t * tempX;
   color_t temp_origin_color = tempY->color;
-  printf("target key = %d\n" , p->key);
-  printf("target left key = %d\n" , p->left->key);
-  printf("target right key = %d\n" , p->right->key);
+  // printf("target key = %d\n" , p->key);
+  // printf("target left key = %d\n" , p->left->key);
+  // printf("target right key = %d\n" , p->right->key);
   if(p->left == t->nil){
     tempX = p->right;
-    printf("tempx key = %d\n" , tempX->key);
+    // printf("tempx key = %d\n" , tempX->key);
     rbtree_transplant(t, p,p->right);
   }else if(p->right == t->nil){
     tempX = p->left;
@@ -332,6 +352,7 @@ int rbtree_erase(rbtree *t, node_t *p) {
     rbtree_erase_fixup(t,tempX);
   }
 
+  free(p);
   return 1;
 }
 
