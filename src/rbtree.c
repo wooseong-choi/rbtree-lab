@@ -36,7 +36,7 @@ void delete_rbtree(rbtree *t) {
 
 
 void left_rotate(rbtree *t ,node_t *n){
-  printf("좌회전\n");
+  // printf("좌회전\n");
   node_t *y = n->right; // y 설정
   n->right = y->left; // y의 왼쪽 서브트리 x의 오른 서브트리로
   if(y->left != t->nil){
@@ -55,7 +55,7 @@ void left_rotate(rbtree *t ,node_t *n){
 }
 
 void right_rotate(rbtree *t ,node_t *n){
-  printf("우회전\n");
+  // printf("우회전\n");
   node_t *y = n->left; // y 설정
   n->left = y->right; // y의 오른쪽 서브트리 x의 왼 서브트리로
   if(y->right != t->nil){

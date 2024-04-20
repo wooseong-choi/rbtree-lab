@@ -74,7 +74,7 @@ void test_erase_root(const key_t key) {
 #else
   assert(t->root == NULL);
 #endif
-
+  free(p);
   delete_rbtree(t);
 }
 
@@ -331,11 +331,13 @@ void test_find_erase(rbtree *t, const key_t *arr, const size_t n) {
     assert(p != NULL);
     assert(p->key == arr[i]);
     rbtree_erase(t, p);
+    free(p);
   }
 
   for (int i = 0; i < n; i++) {
     node_t *p = rbtree_find(t, arr[i]);
     assert(p == NULL);
+    free(p);
   }
 
   for (int i = 0; i < n; i++) {
@@ -348,6 +350,7 @@ void test_find_erase(rbtree *t, const key_t *arr, const size_t n) {
     rbtree_erase(t, p);
     q = rbtree_find(t, arr[i]);
     assert(q == NULL);
+    free(p);
   }
 }
 
