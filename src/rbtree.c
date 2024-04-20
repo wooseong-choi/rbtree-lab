@@ -276,24 +276,33 @@ void rbtree_erase_fixup(rbtree * t, node_t *cur){
 }
 
 void rbtree_transplant(rbtree *t, node_t *cur, node_t *right){
+  // printf( "   is cur %d\n", cur->key);
+  // printf("    is right %d\n", right->key);
+  // printf(" before p.right %d\n", cur->parent->right->key);
   if(cur->parent == t->nil){ // 루트면
     t->root = right;
   }else if(cur == cur->parent->left){ // 부모의 왼쪽 자식이면
     cur->parent->left = right;
   }else{ // 부모의 오른쪽 자식이면
+    
     cur->parent->right = right;
+  // printf(" after p.right %d\n", cur->parent->right->key);
   }
+  // printf(" before r p.right %d\n", right->parent->key);
   right->parent = cur->parent;
+  // printf(" after r p.right %d\n", right->parent->key);
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
   node_t * tempY = p;
   node_t * tempX;
   color_t temp_origin_color = tempY->color;
-  // printf("선언 key = %d\n" , p->key);
+  printf("target key = %d\n" , p->key);
+  printf("target left key = %d\n" , p->left->key);
+  printf("target right key = %d\n" , p->right->key);
   if(p->left == t->nil){
     tempX = p->right;
-    // printf("if key = %d\n" , p->key);
+    printf("tempx key = %d\n" , tempX->key);
     rbtree_transplant(t, p,p->right);
   }else if(p->right == t->nil){
     tempX = p->left;

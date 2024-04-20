@@ -15,9 +15,9 @@ int main(int argc, char *argv[]) {
         rbtree_insert(t, entries[i]);
         /* code */
     }
-    // printf("최초 트리 리스트 출력");
+    printf("최초 트리 리스트 출력");
     rbtree_to_print(t->root,t->nil);
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 3; i++)
     {   
         node_t *p = rbtree_find(t, entries[i]);
         // printf("arr[%d] = %d\n", i, arr[i]);
@@ -25,8 +25,8 @@ int main(int argc, char *argv[]) {
         // assert(p->key == arr[i]);
         rbtree_erase(t, p);
         
-        // printf("%d 키-", p->key);
-        // printf("%d 번째 출력\n", i+1);
+        printf("%d 키-", p->key);
+        printf("%d 번째 출력\n", i+1);
         rbtree_to_print(t->root,t->nil);
     }
     
