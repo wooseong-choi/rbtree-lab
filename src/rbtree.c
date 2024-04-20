@@ -358,6 +358,18 @@ int rbtree_erase(rbtree *t, node_t *p) {
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
+  arr[sizeof(arr)*n] = malloc(sizeof(arr)*n);
+  
+  node_t *tempL = t->root;
+  node_t *tempR = t->root;
+  int cnt = 0;
+  while (tempL != t->nil)
+  {
+ 
+  }
+  
+  
+
   return 0;
 }
 
