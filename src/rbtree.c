@@ -13,7 +13,7 @@ rbtree *new_rbtree(void) {
 // 삽입시 node를 생성하여 넣어줄 것이기 때문에 메모리 할당 필요 없다.
   p->root = p->nil;
 
-  printf("rb_tree 생성\n");
+  // printf("rb_tree 생성\n");
   return p;
 }
 void delete_rbtree_recursive( node_t *cur, node_t *nil ){
@@ -28,7 +28,7 @@ void delete_rbtree_recursive( node_t *cur, node_t *nil ){
 void delete_rbtree(rbtree *t) {
   // TODO: reclaim the tree nodes's memory
 
-  // delete_rbtree_recursive(t->root, t->nil);
+  delete_rbtree_recursive(t->root, t->nil);
   free(t->nil);
 
   free(t);
@@ -36,7 +36,7 @@ void delete_rbtree(rbtree *t) {
 
 
 void left_rotate(rbtree *t ,node_t *n){
-  // printf("좌회전\n");
+  printf("좌회전\n");
   node_t *y = n->right; // y 설정
   n->right = y->left; // y의 왼쪽 서브트리 x의 오른 서브트리로
   if(y->left != t->nil){
@@ -55,7 +55,7 @@ void left_rotate(rbtree *t ,node_t *n){
 }
 
 void right_rotate(rbtree *t ,node_t *n){
-  // printf("우회전\n");
+  printf("우회전\n");
   node_t *y = n->left; // y 설정
   n->left = y->right; // y의 오른쪽 서브트리 x의 왼 서브트리로
   if(y->right != t->nil){
@@ -118,6 +118,7 @@ void rbtree_insert_fixup( rbtree *t, node_t *z ){
     }
 
   }
+
   t->root->color = RBTREE_BLACK;
 }  
 
@@ -160,12 +161,55 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
   // TODO: implement find
-  return t->root;
+  node_t *temp = t->root;
+  node_t *result = NULL;
+
+  while (temp != t->nil)
+  {
+    if(temp->key > key){
+      temp = temp->left;
+    }else if(temp->key < key){
+      temp = temp->right;
+    }else{
+      // find!
+      result = temp;
+      break;
+    }
+  }
+  return result;
 }
 
 node_t *rbtree_min(const rbtree *t) {
   // TODO: implement find
+  node_t *temp = t->root;
+  // node_t *result = temp;
+  // int min = result->key;
+  while (temp != t->nil)
+  {
+      
+  }
+  
+
   return t->root;
+}
+
+node_t *rbtree_min_in_choice(const rbtree *t, node_t * cur) {
+  // TODO: implement find
+  node_t *temp = cur->right;
+  node_t *result = temp;
+  // int min = result->key;
+
+  while (temp != t->nil)
+  {
+    if(temp->left != t->nil){
+      temp = temp->left;
+    }else{
+      // find!
+      result = temp;
+      break;
+    }
+  }
+  return result;
 }
 
 node_t *rbtree_max(const rbtree *t) {
@@ -173,9 +217,113 @@ node_t *rbtree_max(const rbtree *t) {
   return t->root;
 }
 
+void rbtree_erase_fixup(rbtree * t, node_t *cur){
+  node_t *temp; // 형제선언
+  while (cur != t->root && cur->color == RBTREE_BLACK) // 대상이 루트가 아니고 빨갈때
+  {
+    if(cur == cur->parent->left) { // 대상이 대상의 부모 에서 봤을때 왼쪽 형제이면
+      temp = cur->parent->right; // 형제
+      if(temp->color == RBTREE_RED){ // 형제가 붉을 때
+        temp->color = RBTREE_BLACK; // 부모 색 빨아들임
+        cur->parent->color = RBTREE_RED; // 색을 뺏겨서 빨개짐
+        left_rotate(t,cur->parent); // 부모기준 좌회전
+        temp = cur->parent->right;
+      }
+      if( temp->left->color == RBTREE_BLACK && temp->right->color == RBTREE_BLACK ){ // 두 자식이 붉으면
+        temp->color = RBTREE_RED; // 쭈왑당함
+        cur = cur->parent;
+      }else{
+        if(temp->right->color == RBTREE_BLACK){ // 내 오른자식이 검으면 꺾돌바
+          temp->left->color = RBTREE_BLACK;
+          temp->color = RBTREE_RED;
+          right_rotate(t, temp); // 내기준 우회전
+          temp = cur->parent->right;
+        }
+        temp->color = cur->parent->color;
+        cur->parent->color = RBTREE_BLACK;
+        temp->right->color = RBTREE_BLACK;
+        left_rotate(t, cur->parent);
+        cur = t->root;      
+      } 
+    }else{
+      temp = cur->parent->left; // 형제
+      if(temp->color == RBTREE_RED){ // 형제가 붉을 때
+        temp->color = RBTREE_BLACK; // 부모 색 빨아들임
+        cur->parent->color = RBTREE_RED; // 색을 뺏겨서 빨개짐
+        right_rotate(t,cur->parent); // 부모기준 우회전
+        temp = cur->parent->left;
+      }
+      if( temp->left->color == RBTREE_BLACK && temp->left->color == RBTREE_BLACK ){ // 두 자식이 붉으면
+        temp->color = RBTREE_RED; // 쭈왑당함
+        cur = cur->parent;
+      }else{
+        if(temp->left->color == RBTREE_BLACK){ // 내 오른자식이 검으면 꺾돌바
+          temp->left->color = RBTREE_BLACK;
+          temp->color = RBTREE_RED;
+          left_rotate(t, temp); // 내기준 우회전
+          temp = cur->parent->left;
+        }
+        temp->color = cur->parent->color;
+        cur->parent->color = RBTREE_BLACK;
+        temp->left->color = RBTREE_BLACK;
+        right_rotate(t, cur->parent);
+        cur = t->root;
+      } 
+    }
+  }
+
+  cur->color = RBTREE_BLACK; // 루트
+}
+
+void rbtree_transplant(rbtree *t, node_t *cur, node_t *right){
+  if(cur->parent == t->nil){ // 루트면
+    t->root = right;
+  }else if(cur == cur->parent->left){ // 부모의 왼쪽 자식이면
+    cur->parent->left = right;
+  }else{ // 부모의 오른쪽 자식이면
+    cur->parent->right = right;
+  }
+  right->parent = cur->parent;
+}
+
 int rbtree_erase(rbtree *t, node_t *p) {
-  // TODO: implement erase
-  return 0;
+  node_t * tempY = p;
+  node_t * tempX;
+  color_t temp_origin_color = tempY->color;
+  // printf("선언 key = %d\n" , p->key);
+  if(p->left == t->nil){
+    tempX = p->right;
+    // printf("if key = %d\n" , p->key);
+    rbtree_transplant(t, p,p->right);
+  }else if(p->right == t->nil){
+    tempX = p->left;
+    // printf("else if key = %d\n" , p->key);
+    rbtree_transplant(t, p,p->left);
+  }else{
+    // printf("else 들어옴 key = %d\n" , p->key);
+    tempY = rbtree_min_in_choice(t, tempY); // 오른 트리에서 제일 작은값 찾아
+    temp_origin_color = tempY->color; 
+    tempX = tempY->right;
+    if(tempY->parent == p){
+      tempX->parent = tempY;
+    }else {
+      // printf("else key = %d\n" , p->key);
+      rbtree_transplant( t, tempY, tempY->right );
+      tempY->right = p->right;
+      tempY->right->parent = tempY;
+    }
+    // printf("if빠져나옴 key = %d\n" , p->key);
+    rbtree_transplant(t, p, tempY);
+    tempY->left = p->left;
+    tempY->left->parent = tempY;
+    tempY->color = p->color;
+  }
+  if(temp_origin_color == RBTREE_BLACK){
+    // printf("진입하겠음 key = %d\n" , p->key);
+    rbtree_erase_fixup(t,tempX);
+  }
+
+  return 1;
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
@@ -188,7 +336,7 @@ void rbtree_to_print(node_t *t, node_t * nil) {
   // printf("t.print 진입\n");
 
   if( t == nil ){
-    // return 0;
+    return;
   }
 
   if (t != nil){
