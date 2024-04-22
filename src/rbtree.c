@@ -374,7 +374,6 @@ void recursive_to_array(const rbtree *t, node_t *cur, key_t *arr){
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
 
-  
   recursive_to_array(t,t->root,arr);
   // printf("재귀 끝");
   
