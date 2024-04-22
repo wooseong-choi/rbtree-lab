@@ -137,15 +137,15 @@ void test_minmax(key_t *arr, const size_t n) {
 
 void test_to_array(rbtree *t, const key_t *arr, const size_t n) {
   assert(t != NULL);
-  printf("test_to_array in\n");
+  // printf("test_to_array in\n");
   insert_arr(t, arr, n);
   qsort((void *)arr, n, sizeof(key_t), comp);
-  printf("sorted\n");
+  // printf("sorted\n");
 
   key_t *res = calloc(n, sizeof(key_t));
-  printf("allocated\n");
+  // printf("allocated\n");
   rbtree_to_array(t, res, n);
-  printf("array\n");
+  // printf("array\n");
   for (int i = 0; i < n; i++) {
     assert(arr[i] == res[i]);
   }
@@ -167,19 +167,23 @@ void test_multi_instance() {
   const size_t n2 = sizeof(arr2) / sizeof(arr2[0]);
   insert_arr(t2, arr2, n2);
   qsort((void *)arr2, n2, sizeof(key_t), comp);
-
+  // printf("toarray 1st");
   key_t *res1 = calloc(n1, sizeof(key_t));
   rbtree_to_array(t1, res1, n1);
   for (int i = 0; i < n1; i++) {
+    // printf("ㄴㄴㄴㄴ %d == %d\n", arr1[i], res1[i]);
     assert(arr1[i] == res1[i]);
   }
 
+  // printf("toarray 2nd");
   key_t *res2 = calloc(n2, sizeof(key_t));
   rbtree_to_array(t2, res2, n2);
   for (int i = 0; i < n2; i++) {
+    // printf("ㄴㄴㄴㄴ %d == %d\n", arr2[i], res2[i]);
     assert(arr2[i] == res2[i]);
   }
 
+  // printf("꿋꿋");
   free(res2);
   free(res1);
   delete_rbtree(t2);
@@ -322,27 +326,32 @@ void test_to_array_suite() {
 }
 
 void test_find_erase(rbtree *t, const key_t *arr, const size_t n) {
+  // printf("n == %d",n);
   for (int i = 0; i < n; i++) {
     node_t *p = rbtree_insert(t, arr[i]);
     assert(p != NULL);
   }
-
+  // printf( "p에 할당 완료\n" );
   // rbtree_to_print(t->root,t->nil);
 
   for (int i = 0; i < n; i++) {
     node_t *p = rbtree_find(t, arr[i]);
-    printf("arr[%d] = %d\n", i, arr[i]);
+    // printf("arr[%d] = %d\n", i, p->key);
     assert(p != NULL);
     assert(p->key == arr[i]);
+    // printf("삭제 전\n");
     rbtree_erase(t, p);
+    // printf("삭제 후\n");
     // free(p);
   }
+  // printf( "찾고 지우기 완료\n" );
 
   for (int i = 0; i < n; i++) {
     node_t *p = rbtree_find(t, arr[i]);
     assert(p == NULL);
     // free(p);
   }
+  // printf( "null 체크 완료\n" );
 
   for (int i = 0; i < n; i++) {
     node_t *p = rbtree_insert(t, arr[i]);
@@ -356,6 +365,7 @@ void test_find_erase(rbtree *t, const key_t *arr, const size_t n) {
     assert(q == NULL);
     // free(p);
   }
+  // printf( "뀨\n" );
 }
 
 void test_find_erase_fixed() {
@@ -376,25 +386,35 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
   for (int i = 0; i < n; i++) {
     arr[i] = rand();
   }
-
+  
   test_find_erase(t, arr, n);
 
+  
   free(arr);
   delete_rbtree(t);
 }
 
 int main(void) {
   test_init();
-  // printf("작동 테스트 준비\n");
+  // printf("test_init작동 다음\n");
   test_insert_single(1024);
+  // printf("test_insert_single 작동 다음\n");
   test_find_single(512, 1024);
+  // printf("test_find_single작동 다음\n");
   test_erase_root(128);
+  // printf("test_erase_root작동 다음\n");
   test_find_erase_fixed();
+  // printf("test_find_erase_fixed작동 다음\n");
   test_minmax_suite();
+  // printf("test_minmax_suite작동 다음\n");
   test_to_array_suite();
+  // printf("test_to_array_suite작동 다음\n");
   test_distinct_values();
+  // printf("test_distinct_values작동 다음\n");
   test_duplicate_values();
-  // test_multi_instance();
-  // test_find_erase_rand(10000, 17);
+  // printf("test_duplicate_values작동 다음\n");
+  test_multi_instance();
+  // printf("test_multi_instance작동 다음\n");
+  test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }

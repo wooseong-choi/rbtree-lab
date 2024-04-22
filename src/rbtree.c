@@ -237,62 +237,62 @@ node_t *rbtree_min_in_choice(const rbtree *t, node_t * cur) {
 }
 
 
-void rbtree_erase_fixup(rbtree * t, node_t *cur){
-  node_t *temp; // 형제선언
-  while (cur != t->root && cur->color == RBTREE_BLACK) // 대상이 루트가 아니고 빨갈때
+void rbtree_erase_fixup(rbtree * t, node_t *x){
+  node_t *s; // 형제선언
+  while (x != t->root && x->color == RBTREE_BLACK) // 대상이 루트가 아니고 빨갈때
   {
-    if(cur == cur->parent->left) { // 대상이 대상의 부모 에서 봤을때 왼쪽 형제이면
-      temp = cur->parent->right; // 형제
-      if(temp->color == RBTREE_RED){ // 형제가 붉을 때
-        temp->color = RBTREE_BLACK; // 부모 색 빨아들임
-        cur->parent->color = RBTREE_RED; // 색을 뺏겨서 빨개짐
-        left_rotate(t,cur->parent); // 부모기준 좌회전
-        temp = cur->parent->right;
+    if(x == x->parent->left) { // 대상이 대상의 부모 에서 봤을때 왼쪽 형제이면
+      s = x->parent->right; // 형제
+      if(s->color == RBTREE_RED){ // 형제가 붉을 때
+        s->color = RBTREE_BLACK; // 부모 색 빨아들임
+        x->parent->color = RBTREE_RED; // 색을 뺏겨서 빨개짐
+        left_rotate(t,x->parent); // 부모기준 좌회전
+        s = x->parent->right;
       }
-      if( temp->left->color == RBTREE_BLACK && temp->right->color == RBTREE_BLACK ){ // 두 자식이 붉으면
-        temp->color = RBTREE_RED; // 쭈왑당함
-        cur = cur->parent;
+      if( s->left->color == RBTREE_BLACK && s->right->color == RBTREE_BLACK ){ // 두 자식이 붉으면
+        s->color = RBTREE_RED; // 쭈왑당함
+        x = x->parent;
       }else{
-        if(temp->right->color == RBTREE_BLACK){ // 내 오른자식이 검으면 꺾돌바
-          temp->left->color = RBTREE_BLACK;
-          temp->color = RBTREE_RED;
-          right_rotate(t, temp); // 내기준 우회전
-          temp = cur->parent->right;
+        if(s->right->color == RBTREE_BLACK){ // 내 오른자식이 검으면 꺾돌바
+          s->left->color = RBTREE_BLACK;
+          s->color = RBTREE_RED;
+          right_rotate(t, s); // 내기준 우회전
+          s = x->parent->right;
         }
-        temp->color = cur->parent->color;
-        cur->parent->color = RBTREE_BLACK;
-        temp->right->color = RBTREE_BLACK;
-        left_rotate(t, cur->parent);
-        cur = t->root;      
+        s->color = x->parent->color;
+        x->parent->color = RBTREE_BLACK;
+        s->right->color = RBTREE_BLACK;
+        left_rotate(t, x->parent);
+        x = t->root;      
       } 
     }else{
-      temp = cur->parent->left; // 형제
-      if(temp->color == RBTREE_RED){ // 형제가 붉을 때
-        temp->color = RBTREE_BLACK; // 부모 색 빨아들임
-        cur->parent->color = RBTREE_RED; // 색을 뺏겨서 빨개짐
-        right_rotate(t,cur->parent); // 부모기준 우회전
-        temp = cur->parent->left;
+      s = x->parent->left; // 형제
+      if(s->color == RBTREE_RED){ // 형제가 붉을 때
+        s->color = RBTREE_BLACK; // 부모 색 빨아들임
+        x->parent->color = RBTREE_RED; // 색을 뺏겨서 빨개짐
+        right_rotate(t,x->parent); // 부모기준 우회전
+        s = x->parent->left;
       }
-      if( temp->left->color == RBTREE_BLACK && temp->left->color == RBTREE_BLACK ){ // 두 자식이 붉으면
-        temp->color = RBTREE_RED; // 쭈왑당함
-        cur = cur->parent;
+      if( s->left->color == RBTREE_BLACK && s->right->color == RBTREE_BLACK ){ // 두 자식이 붉으면
+        s->color = RBTREE_RED; // 쭈왑당함
+        x = x->parent;
       }else{
-        if(temp->left->color == RBTREE_BLACK){ // 내 오른자식이 검으면 꺾돌바
-          temp->left->color = RBTREE_BLACK;
-          temp->color = RBTREE_RED;
-          left_rotate(t, temp); // 내기준 우회전
-          temp = cur->parent->left;
+        if(s->left->color == RBTREE_BLACK){ // 내 오른자식이 검으면 꺾돌바
+          s->right->color = RBTREE_BLACK;
+          s->color = RBTREE_RED;
+          left_rotate(t, s); // 내기준 우회전
+          s = x->parent->left;
         }
-        temp->color = cur->parent->color;
-        cur->parent->color = RBTREE_BLACK;
-        temp->left->color = RBTREE_BLACK;
-        right_rotate(t, cur->parent);
-        cur = t->root;
+        s->color = x->parent->color;
+        x->parent->color = RBTREE_BLACK;
+        s->left->color = RBTREE_BLACK;
+        right_rotate(t, x->parent);
+        x = t->root;
       } 
     }
   }
 
-  cur->color = RBTREE_BLACK; // 루트
+  x->color = RBTREE_BLACK; // 루트
 }
 
 void rbtree_transplant(rbtree *t, node_t *cur, node_t *right){
@@ -317,38 +317,38 @@ int rbtree_erase(rbtree *t, node_t *p) {
   node_t * tempY = p;
   node_t * tempX;
   color_t temp_origin_color = tempY->color;
-  // printf("target key = %d\n" , p->key);
-  // printf("target left key = %d\n" , p->left->key);
-  // printf("target right key = %d\n" , p->right->key);
+  printf("target key = %d\n" , p->key);
+  printf("target left key = %d\n" , p->left->key);
+  printf("target right key = %d\n" , p->right->key);
   if(p->left == t->nil){
     tempX = p->right;
-    // printf("tempx key = %d\n" , tempX->key);
+    printf("tempx key = %d\n" , tempX->key);
     rbtree_transplant(t, p,p->right);
   }else if(p->right == t->nil){
     tempX = p->left;
-    // printf("else if key = %d\n" , p->key);
+    printf("else if key = %d\n" , p->key);
     rbtree_transplant(t, p,p->left);
   }else{
-    // printf("else 들어옴 key = %d\n" , p->key);
+    printf("else 들어옴 key = %d\n" , p->key);
     tempY = rbtree_min_in_choice(t, tempY); // 오른 트리에서 제일 작은값 찾아
     temp_origin_color = tempY->color; 
     tempX = tempY->right;
     if(tempY->parent == p){
       tempX->parent = tempY;
     }else {
-      // printf("else key = %d\n" , p->key);
+      printf("else key = %d\n" , p->key);
       rbtree_transplant( t, tempY, tempY->right );
       tempY->right = p->right;
       tempY->right->parent = tempY;
     }
-    // printf("if빠져나옴 key = %d\n" , p->key);
+    printf("if빠져나옴 key = %d\n" , p->key);
     rbtree_transplant(t, p, tempY);
     tempY->left = p->left;
     tempY->left->parent = tempY;
     tempY->color = p->color;
   }
   if(temp_origin_color == RBTREE_BLACK){
-    // printf("진입하겠음 key = %d\n" , p->key);
+    printf("진입하겠음 key = %d\n" , p->key);
     rbtree_erase_fixup(t,tempX);
   }
 
@@ -369,17 +369,11 @@ void recursive_to_array(const rbtree *t, node_t *cur, key_t *arr){
   
   arr[recursion_temp++] = cur->key;
   recursive_to_array(t, cur->right, arr);
-  
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
-  // arr[sizeof(arr)*n] = malloc(sizeof(arr)*n);
-  
-  node_t *tempL = t->root;
-  node_t *tempR = t->root;
-  int cnt = 0;
-  // printf("진입");
+
   
   recursive_to_array(t,t->root,arr);
   // printf("재귀 끝");
@@ -388,7 +382,7 @@ int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   //   // printf("is arr tostring %d \n",arr[i]);
   // }
 
-
+  recursion_temp = 0;
   return 0;
 }
 
