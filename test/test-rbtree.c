@@ -137,12 +137,15 @@ void test_minmax(key_t *arr, const size_t n) {
 
 void test_to_array(rbtree *t, const key_t *arr, const size_t n) {
   assert(t != NULL);
-
+  printf("test_to_array in\n");
   insert_arr(t, arr, n);
   qsort((void *)arr, n, sizeof(key_t), comp);
+  printf("sorted\n");
 
   key_t *res = calloc(n, sizeof(key_t));
+  printf("allocated\n");
   rbtree_to_array(t, res, n);
+  printf("array\n");
   for (int i = 0; i < n; i++) {
     assert(arr[i] == res[i]);
   }
@@ -382,13 +385,13 @@ void test_find_erase_rand(const size_t n, const unsigned int seed) {
 
 int main(void) {
   test_init();
-  printf("작동 테스트 준비\n");
+  // printf("작동 테스트 준비\n");
   test_insert_single(1024);
   test_find_single(512, 1024);
   test_erase_root(128);
   test_find_erase_fixed();
   test_minmax_suite();
-  // test_to_array_suite();
+  test_to_array_suite();
   test_distinct_values();
   test_duplicate_values();
   // test_multi_instance();

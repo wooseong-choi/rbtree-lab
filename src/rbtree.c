@@ -356,22 +356,42 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 1;
 }
 
+int recursion_temp = 0;
+
+void recursive_to_array(const rbtree *t, node_t *cur, key_t *arr){
+  // printf("recursive_to_arr%d\n", *temp);
+  if (cur == t->nil){
+    return;
+  }
+
+  recursive_to_array(t, cur->left, arr);
+  // printf("재귀번호, %d 값 %d\n", recursion_temp,cur->key);
+  
+  arr[recursion_temp++] = cur->key;
+  recursive_to_array(t, cur->right, arr);
+  
+}
+
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
-  arr[sizeof(arr)*n] = malloc(sizeof(arr)*n);
+  // arr[sizeof(arr)*n] = malloc(sizeof(arr)*n);
   
   node_t *tempL = t->root;
   node_t *tempR = t->root;
   int cnt = 0;
-  while (tempL != t->nil)
-  {
- 
-  }
+  // printf("진입");
   
+  recursive_to_array(t,t->root,arr);
+  // printf("재귀 끝");
   
+  // for (int i = 0; i < n; i++) {
+  //   // printf("is arr tostring %d \n",arr[i]);
+  // }
+
 
   return 0;
 }
+
 
 void rbtree_to_print(node_t *t, node_t * nil) {
   // TODO: implement to_print
