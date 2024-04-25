@@ -356,32 +356,33 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 1;
 }
 
-int recursion_temp = 0;
+// int recursion_temp = 0;
 
-void recursive_to_array(const rbtree *t, node_t *cur, key_t *arr){
+void recursive_to_array(const rbtree *t, node_t *cur, key_t *arr, int* n){
   // printf("recursive_to_arr%d\n", *temp);
   if (cur == t->nil){
     return;
   }
 
-  recursive_to_array(t, cur->left, arr);
+  recursive_to_array(t, cur->left, arr, n);
   // printf("재귀번호, %d 값 %d\n", recursion_temp,cur->key);
-  
-  arr[recursion_temp++] = cur->key;
-  recursive_to_array(t, cur->right, arr);
+  // printf("뀨 %d", *n);
+  // arr[recursion_temp++] = cur->key;
+  arr[(*n)++] = cur->key;
+  recursive_to_array(t, cur->right, arr, n);
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   // TODO: implement to_array
-
-  recursive_to_array(t,t->root,arr);
+  int i = 0;
+  recursive_to_array(t,t->root,arr, &i);
   // printf("재귀 끝");
   
   // for (int i = 0; i < n; i++) {
   //   // printf("is arr tostring %d \n",arr[i]);
   // }
 
-  recursion_temp = 0;
+  // recursion_temp = 0;
   return 0;
 }
 
@@ -404,4 +405,31 @@ void rbtree_to_print(node_t *t, node_t * nil) {
     rbtree_to_print(t->right, nil);
   }
   // return 0;
+}
+
+void printTree(rbtree *t, node_t *cur, int level, int isLeft) {
+    if (cur == t->nil) {
+        return;
+    }
+
+    // 오른쪽 자식 노드 출력
+    printTree(t, cur->right, level + 1, 0);
+
+    // 현재 노드 출력
+    for (int i = 0; i < level - 1; i++) {
+        printf("    ");
+    }
+    if (level > 0) {
+        printf(isLeft ? " \\_ " : " /⎺ ");  // 왼쪽 자식일 경우 "\\" 출력, 오른쪽 자식일 경우 "/" 출력
+    }
+    if (cur->color == RBTREE_RED)
+    {
+      printf("\x1b[31m%d\x1b[0m\n", cur->key);
+    }
+    else{
+      printf("%d\n", cur->key);
+    }
+
+    // 왼쪽 자식 노드 출력
+    printTree(t, cur->left, level + 1, 1);
 }

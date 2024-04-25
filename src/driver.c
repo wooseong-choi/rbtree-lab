@@ -63,3 +63,27 @@ int main(int argc, char *argv[]) {
     // free(res);
     printf("\n");
 }
+
+// #include <stdio.h>
+// int main()
+// {
+// int numArr[5] = { 11, 22, 33, 44, 55 };
+// int *numPtrA;
+// void *ptr;
+// numPtrA = &numArr[2];
+
+// ptr = numArr;
+// printf("%d\n", *(numPtrA+2));
+// printf("%d\n",*((int *)ptr+1));
+// return 0;
+// }
+
+// #include <stdio.h>
+// int main() {
+// char* str[2];
+// str[0] = "hello!";
+// str[1] = "jungler";
+// printf("1. %s\n", str[0] + 1);
+// printf("2. %s\n", (str + 1)[0] + 2);
+// return 0;
+// }
